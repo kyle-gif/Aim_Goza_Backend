@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>점수판</title>
+    <title>Scores</title>
 </head>
 <body>
     <h1>최근 10개 점수</h1>
     <table border="1">
-        <tr><th>순위</th><th>사용자명</th><th>점수</th><th>날짜</th></tr>
+        <tr><th>Ranking</th><th>Username</th><th>Score</th><th>Date</th></tr>
         {% for score in scores %}
         <tr>
             <td>{{ forloop.counter }}</td>
