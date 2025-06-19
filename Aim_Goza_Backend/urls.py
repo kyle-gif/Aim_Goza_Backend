@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('scores.urls')),
+    path('scores/', include('scores.urls')),  # 예시: scores 앱이 있는 경우
+    path('', RedirectView.as_view(url='/scores/', permanent=True)),
 ]
 
