@@ -1,21 +1,162 @@
-<!-- templates/scores.html -->
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Scores</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top 10 Scores</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #232323;
+      color: #fafafa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .controls select {
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: none;
+      background: #444;
+      color: #fafafa;
+    }
+
+    .table-container {
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      background-color: #444444;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #444444;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    th {
+      background-color: #444444;
+      color: #fafafa;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #444444;
+    }
+
+    tr:hover td {
+      background-color: #555555;
+    }
+
+    tr:nth-child(n+2) td {
+      animation-delay: calc(0.1s * var(--delay-order));
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      th, td {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>최근 10개 점수</h1>
-    <table border="1">
+  <h1>Scores</h1>
+  <div class="controls">
+    <label for="sort-type">sort by: </label>
+    <select id="sort-type">
+      <option value="score">Scores</option>
+      <option value="date">Recent</option>
+    </select>
+  </div>
+
+  <div class="table-container">
+    <table id="score-table">
+      <thead>
         <tr><th>Ranking</th><th>Username</th><th>Score</th><th>Date</th></tr>
+      </thead>
+      <tbody>
         {% for score in scores %}
         <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ score.username }}</td>
-            <td>{{ score.score }}</td>
-            <td>{{ score.created_at }}</td>
+          <td>?</td>
+          <td>{{ score.username }}</td>
+          <td>{{ score.score }}</td>
+          <td>{{ score.created_at }}</td>
         </tr>
         {% endfor %}
+      </tbody>
     </table>
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const sortTypeSelect = document.getElementById("sort-type");
+      const table = document.getElementById("score-table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      function sortAndUpdateTable(type) {
+        rows.sort((a, b) => {
+          if (type === "score") {
+            const scoreA = parseInt(a.children[2].textContent, 10);
+            const scoreB = parseInt(b.children[2].textContent, 10);
+            return scoreB - scoreA;
+          } else if (type === "date") {
+            const dateA = new Date(a.children[3].textContent);
+            const dateB = new Date(b.children[3].textContent);
+            return dateB - dateA;
+          }
+        });
+
+        rows.forEach((row, index) => {
+          row.children[0].textContent = index + 1;
+          row.style.setProperty("--delay-order", index + 1);
+          tbody.appendChild(row);
+        });
+      }
+
+      // 초기 정렬
+      sortAndUpdateTable(sortTypeSelect.value);
+
+      // 셀렉트 이벤트 연결
+      sortTypeSelect.addEventListener("change", () => {
+        sortAndUpdateTable(sortTypeSelect.value);
+      });
+    });
+  </script>
 </body>
 </html>
