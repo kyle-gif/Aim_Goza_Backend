@@ -1,0 +1,37 @@
+FROM python:3.10-slim
+
+# 시스템 패키지 업데이트 및 필요한 패키지 설치
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# 작업 디렉터리 설정
+WORKDIR /app
+
+# Python 의존성 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 프로젝트 파일 복사
+COPY . .
+
+# 환경변수 설정
+ENV PYTHONPATH=/app
+ENV DJANGO_SETTINGS_MODULE=Aim_Goza_Backend.settings
+ENV DEBUG=False
+
+# 데이터베이스 마이그레이션 및 정적 파일 수집
+RUN python manage.py collectstatic --noinput
+
+# 포트 노출
+EXPOSE 8000
+
+# 시작 스크립트 생성
+RUN echo '#!/bin/bash\n\
+python manage.py migrate\n\
+exec gunicorn Aim_Goza_Backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120' > /app/start.sh
+
+RUN chmod +x /app/start.sh
+
+# 실행
+CMD ["/app/start.sh"] 
