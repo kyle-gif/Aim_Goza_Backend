@@ -14,5 +14,9 @@ class ScoreListCreateAPIView(generics.ListCreateAPIView):
 # HTML 템플릿을 위한 뷰 (최근 10개 점수 조회)
 def scoreboard(request):
     game_type = request.GET.get('gameType', 'grid')
-    scores = models.Score.objects.filter(gameType=game_type).order_by('-created_at')[:10]
-    return render(request, 'scores.html', {'scores': scores, 'gameType': game_type})
+    sort = request.GET.get('sort', 'score')
+    if sort == 'date':
+        scores = models.Score.objects.filter(gameType=game_type).order_by('-created_at')[:10]
+    else:
+        scores = models.Score.objects.filter(gameType=game_type).order_by('-score', '-created_at')[:10]
+    return render(request, 'scores.html', {'scores': scores, 'gameType': game_type, 'sort': sort})
