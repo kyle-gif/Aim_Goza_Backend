@@ -95,32 +95,21 @@
   </style>
 </head>
 <body>
-  <h1>Scores</h1>
-  <div class="controls">
-    <label for="sort-type">sort by: </label>
-    <select id="sort-type">
-      <option value="score">Scores</option>
-      <option value="date">Recent</option>
-    </select>
+  <h1>Scoreboard</h1>
+  <div>
+      {% if gameType == 'grid' %}
+          <h2>Grid 게임 점수판</h2>
+      {% elif gameType == 'track' %}
+          <h2>Track 게임 점수판</h2>
+      {% else %}
+          <h2>알 수 없는 게임 타입</h2>
+      {% endif %}
   </div>
-
-  <div class="table-container">
-    <table id="score-table">
-      <thead>
-        <tr><th>Ranking</th><th>Username</th><th>Score</th><th>Date</th></tr>
-      </thead>
-      <tbody>
-        {% for score in scores %}
-        <tr>
-          <td>?</td>
-          <td>{{ score.username }}</td>
-          <td>{{ score.score }}</td>
-          <td>{{ score.created_at }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <ul>
+      {% for score in scores %}
+          <li>{{ score.username }}: {{ score.score }} ({{ score.created_at }})</li>
+      {% endfor %}
+  </ul>
 
   <script>
     window.addEventListener("DOMContentLoaded", () => {
