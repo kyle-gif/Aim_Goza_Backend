@@ -44,28 +44,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Aim_Goza_Backend.urls'
 
-CORS_ALLOWED_ORIGINS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type', # 이 헤더를 허용하는 것이 중요합니다.
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
+CORS_ALLOW_HEADERS = ['*']
 
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS', # Preflight 요청을 위해 OPTIONS는 필수입니다.
-    'PATCH',
-    'POST',
-    'PUT',
-]
+CORS_ALLOW_METHODS = ['*']
 
 TEMPLATES = [
     {
